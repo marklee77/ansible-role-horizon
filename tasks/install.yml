@@ -18,13 +18,23 @@
     update_cache: yes 
     cache_valid_time: 600
   with_items:
-    - python-keystoneclient
-    - python-mysqldb
-    - keystone
+    - apache2
+    - libapache2-mod-wsgi
+    - memcached
+    - openstack-dashboard
+
+- name: ensure keystone packages and dependencies are installed
+  apt: 
+    pkg: "{{ item }}"
+    state: purged
+    update_cache: yes 
+    cache_valid_time: 600
+  with_items:
+    - openstack-dashboard-ubuntu-theme
 
 - name: ensure keystone is started and enabled
   service: 
-    name: keystone
+    name: apache2
     state: started 
     enabled: yes
 
