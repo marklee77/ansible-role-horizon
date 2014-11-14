@@ -34,7 +34,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     machine.vm.provision "ansible" do |ansible|
       ansible.playbook = "provisioning/prep.yml"
       ansible.extra_vars = {
-        #nova_compute_dockerized_deployment: true,
         mariadb_bind_address: "0.0.0.0",
         openstack_network_node_ip: "{{ ansible_eth1.ipv4.address }}",
         openstack_network_external_device: "eth2",
@@ -44,6 +43,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         openstack_network_external_dns_servers: "8.8.8.8",
         openstack_network_external_allocation_pool_start: "10.2.0.100",
         openstack_network_external_allocation_pool_end: "10.2.0.200"
+        openstack_compute_node_ip: "{{ ansible_eth1.ipv4.address }}"
       }
       ansible.groups = {
         "compute" => ["compute-001", "compute-002"]
@@ -53,13 +53,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     machine.vm.provision "ansible" do |ansible|
       ansible.playbook = "provisioning/deploy.yml"
-      ansible.extra_vars = {
-        #nova_compute_dockerized_deployment: true,
-        openstack_compute_node_ip: "{{ ansible_eth1.ipv4.address }}"
-      }
-      ansible.groups = {
-        "compute" => ["compute-001", "compute-002"]
-      }
+      #ansible.extra_vars = {
+      #  nova_compute_dockerized_deployment: true,
+      #}
       ansible.limit = 'all'
     end
 
