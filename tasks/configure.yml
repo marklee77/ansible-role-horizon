@@ -1,26 +1,17 @@
 ---
-#- name: ensure keystone is properly configured
-#  ini_file:
-#    dest: /etc/keystone/keystone.conf
-#    group: keystone
-#    mode: 0640
-#    section: "{{ item.section }}"
-#    option: "{{ item.option }}"
-#    value: "{{ item.value }}"
-#  with_items:
-#    - { section: DEFAULT, option: log_dir, value: /var/log/keystone }
-#    - { section: DEFAULT, option: verbose, value: "{{ openstack_log_verbose }}" }
-#    - { section: DEFAULT, option: debug, value: "{{ openstack_log_debug }}" }
-#    - { section: DEFAULT, 
-#        option: admin_token, value: "{{ openstack_identity_admin_token }}" }
-#    - { section: database, option: connection,
-#        value: "mysql://keystone:{{ openstack_mysql_keystone_password }}@{{ 
-#                  openstack_mysql_host }}:{{ openstack_mysql_port }}/keystone" }
-#  register: modify_keystone_ini
+- name: ensure that dashboard is configured to log in to keystone
+  lineinfile:
+    dest: /etc/openstack-dashboard/local_settings.py
+    line: OPENSTACK_HOST = "{{ openstack_identity_endpoint_host }}"
+    regexp: ^OPENSTACK_HOST\s*=
+    state: present
+  register: modify_local_settings
 
-#- name: restart keystone
-#  service:
-#    name: keystone
-#    state: restarted
-#  when: modify_keystone_ini|changed and
-#        keystone_dockerize_context is not defined
+- name: restart openstack dashboard if necessary
+  service:
+    name: "{{ item}}"
+    state: restarted
+  with_items:
+    - apache2
+    - memcached
+  when: modify_local_settings|changed

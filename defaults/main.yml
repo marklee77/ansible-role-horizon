@@ -37,7 +37,7 @@ openstack_identity_public_url: >
 openstack_default_region: RegionOne
 
 # The variables below only apply to dockerized deployment
-keystone_dockerized_deployment: false
-keystone_docker_username: default
-keystone_docker_imagename: keystone
-keystone_docker_containername: keystone
+horizon_dockerized_deployment: false
+horizon_docker_username: default
+horizon_docker_imagename: keystone
+horizon_docker_containername: keystone
