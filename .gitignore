@@ -1,4 +1,5 @@
 .vagrant
+library/*
 private
 provisioning/library
 roles/*
