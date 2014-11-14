@@ -1,9 +1,9 @@
 ---
-- hosts: all
-  sudo: True
-  vars: 
+- hosts: controller
+  sudo: False
+  vars:
+    cirros_url: http://cdn.download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img
     openstack_identity_demo_password: password
-
   tasks:
 
     - name: update admin.openrc from template
@@ -35,8 +35,21 @@
         user: demo
         role: _member_
 
-    - name: update demo.openrc from template
+    - name: update demo.openrc template
       template:
         src: templates/demo.openrc
         dest: "{{ ansible_env.PWD }}/demo.openrc"
-        owner: "{{ ansible_ssh_user }}"
+        mode: 0600
+
+    - name: ensure cirros image is registered
+      glance_image:
+        auth_url: "{{ openstack_identity_public_url }}"
+        login_tenant_name: demo
+        login_username: demo
+        login_password: "{{ openstack_identity_demo_password }}"
+        name: cirros
+        disk_format: qcow2
+        copy_from: "{{ cirros_url }}"
+        is_public: True
+        timeout: 1200
+        state: present
