@@ -42,7 +42,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         openstack_network_external_name: "public",
         openstack_network_external_dns_servers: "8.8.8.8",
         openstack_network_external_allocation_pool_start: "10.2.0.100",
-        openstack_network_external_allocation_pool_end: "10.2.0.200"
+        openstack_network_external_allocation_pool_end: "10.2.0.200",
         openstack_compute_node_ip: "{{ ansible_eth1.ipv4.address }}"
       }
       ansible.groups = {
