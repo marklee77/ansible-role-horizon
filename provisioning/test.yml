@@ -53,3 +53,15 @@
         is_public: True
         timeout: 1200
         state: present
+
+    # it is not strictly necessary for demo to have the admin role, but it lets
+    # us see and test more of horizon
+    
+    - name: ensure demo user has admin role
+      keystone_user:
+        endpoint: "{{ openstack_identity_admin_url }}"
+        token: "{{ openstack_identity_admin_token }}"
+        tenant: demo
+        user: demo
+        role: admin
+
