@@ -1,20 +1,9 @@
 ---
-- include: mysql.yml
-
 - include: docker.yml
-  when: keystone_dockerized_deployment
+  when: horizon_dockerized_deployment
 
 - include: install.yml
-  when: not keystone_dockerized_deployment
+  when: not horizon_dockerized_deployment
 
 - include: configure.yml
-  when: not keystone_dockerized_deployment 
-
-- name: wait until keystone service is ready
-  wait_for:
-    delay: 1
-    host: "{{ openstack_identity_endpoint_host }}"
-    port: 35357
-    state: started
-
-- include: keystone.yml
+  when: not horizon_dockerized_deployment 

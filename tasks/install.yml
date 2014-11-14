@@ -11,7 +11,7 @@
   command: apt-add-repository cloud-archive:icehouse
   when: ansible_distribution_release == "precise"
   
-- name: ensure keystone packages and dependencies are installed
+- name: ensure horizon packages and dependencies are installed
   apt: 
     pkg: "{{ item }}"
     state: latest 
@@ -23,7 +23,7 @@
     - memcached
     - openstack-dashboard
 
-- name: ensure keystone packages and dependencies are installed
+- name: ensure ubuntu theme is purged
   apt: 
     pkg: "{{ item }}"
     state: purged
@@ -32,34 +32,8 @@
   with_items:
     - openstack-dashboard-ubuntu-theme
 
-- name: ensure keystone is started and enabled
+- name: ensure web server is started and enabled
   service: 
     name: apache2
     state: started 
     enabled: yes
-
-- name: ensure keystone is properly shut down for dockerized deployments
-  service:
-    name: keystone
-    state: stopped
-    enabled: yes
-  when: keystone_dockerize_context is defined
-
-- name: ensure supervisor is installed for dockerized deployments
-  apt:
-    pkg: "{{ item }}"
-    state: latest
-    update_cache: yes
-    cache_valid_time: 600
-  with_items:
-    - supervisor
-  when: keystone_dockerize_context is defined
-
-- name: update supervisor configuration from template for dockerized deployments
-  template:
-    src: etc/supervisor/conf.d/supervisord.conf
-    dest: /etc/supervisor/conf.d/supervisord.conf
-    owner: root
-    group: root
-    mode: 0644
-  when: keystone_dockerize_context is defined

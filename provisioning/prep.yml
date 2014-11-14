@@ -3,27 +3,19 @@
   gather_facts: True
   sudo: True
   roles:
-    - { role: marklee77.docker, when: keystone_dockerized_deployment }
-
-- hosts: all
-  gather_facts: True
-  sudo: True
-  roles:
     - marklee77.mariadb
+    - marklee77.rabbitmq-server
+    - marklee77.keystone
+    - marklee77.glance
+    - marklee77.nova-controller
+    - marklee77.neutron-controller
+    - marklee77.neutron-network
+    - marklee77.nova-compute
 
 - hosts: all
   gather_facts: True
   sudo: True
   tasks:
-
-    - name: ensure that pip is installed
-      shell: curl -s https://bootstrap.pypa.io/get-pip.py | python -
-             creates=/usr/local/bin/pip
-
-    - name: ensure that docker client python library is installed
-      pip:
-        name: docker-py
-        state: latest
 
     - name: ensure required packages for prep are installed
       apt:
@@ -34,3 +26,6 @@
       with_items:
         - python-mysqldb
         - python-keystoneclient
+        - python-glanceclient
+        - python-novaclient
+        - python-neutronclient
