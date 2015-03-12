@@ -42,8 +42,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         openstack_network_endpoint_host: "10.1.0.2",
         openstack_network_node_ip: "{{ ansible_eth1.ipv4.address }}",
         openstack_network_external_device: "eth2",
-        openstack_network_external_ip: "10.2.0.2",
-        openstack_network_external_netmask: 16,
         openstack_network_external_name: "public",
         openstack_network_external_dns_servers: "8.8.8.8",
         openstack_network_external_allocation_pool_start: "10.2.0.100",
