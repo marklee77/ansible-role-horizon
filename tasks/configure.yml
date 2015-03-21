@@ -7,6 +7,16 @@
     state: present
   register: modify_local_settings
 
+# Trying to fix restart problem...
+- name: stop openstack dashboard if necessary
+  service:
+    name: "{{ item}}"
+    state: stopped
+  with_items:
+    - apache2
+    - memcached
+  when: modify_local_settings|changed
+
 - name: restart openstack dashboard if necessary
   service:
     name: "{{ item}}"
