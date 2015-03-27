@@ -1,5 +1,5 @@
 ---
-- hosts: controller
+- hosts: all
   gather_facts: True
   sudo: True
   roles:
@@ -11,7 +11,7 @@
     - marklee77.neutron-controller
     - marklee77.neutron-network
 
-- hosts: compute
+- hosts: all
   gather_facts: True
   sudo: True
   roles:
