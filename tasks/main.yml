@@ -1,9 +1,3 @@
 ---
-- include: docker.yml
-  when: horizon_dockerized_deployment
-
 - include: install.yml
-  when: not horizon_dockerized_deployment
-
 - include: configure.yml
-  when: not horizon_dockerized_deployment 

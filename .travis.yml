@@ -4,43 +4,36 @@ python: "2.7"
 
 before_install:
 
-    # Remove MySQL.
-    - sudo apt-get -y purge 'mysql*'
-    - sudo apt-get -y autoremove
-    - sudo apt-get -y autoclean
-    - sudo rm -rf /var/lib/mysql
-    - sudo truncate -s 0 /var/log/mysql/error.log
-
     - sudo apt-get update
 
 install:
 
     # Install Ansible.
     - pip install ansible
-    - ansible-playbook -i inventories/local.ini provisioning/getreqs.yml
-    - ansible-playbook -i inventories/local.ini provisioning/prep.yml
+    - ansible-playbook -i inventories/local.ini getreqs.yml
+    - ansible-playbook -i inventories/local.ini prepare-vm.yml
 
 script:
 
     # Check the role/playbook's syntax.
-    - ansible-playbook -i inventories/local.ini provisioning/deploy.yml --syntax-check
+    - ansible-playbook -i inventories/local.ini deploy.yml --syntax-check
 
     # Run the role/playbook with ansible-playbook.
-    - ansible-playbook -i inventories/local.ini provisioning/deploy.yml
+    - ansible-playbook -i inventories/local.ini deploy.yml
 
     # Idempotence Test
     - >
-      ansible-playbook -i inventories/local.ini provisioning/deploy.yml
+      ansible-playbook -i inventories/local.ini deploy.yml
       | grep -q 'changed=0.*failed=0'
       && (echo 'Idempotence test: pass' && exit 0)
       || (echo 'Idempotence test: fail' && exit 1)
 
     # Run test
-    - ansible-playbook -i inventories/local.ini provisioning/test.yml
+    - ansible-playbook -i inventories/local.ini test.yml
 
     # Verify test
     - >
-      ansible-playbook -i inventories/local.ini provisioning/test.yml
+      ansible-playbook -i inventories/local.ini test.yml
       | grep -q 'changed=0.*failed=0'
       && (echo 'Idempotence test: pass' && exit 0)
       || (echo 'Idempotence test: fail' && exit 1)

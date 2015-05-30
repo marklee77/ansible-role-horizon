@@ -7,7 +7,7 @@
     state: present
   register: modify_local_settings
 
-# Trying to fix restart problem...
+# need explicit stop due to bug in restart
 - name: stop openstack dashboard if necessary
   service:
     name: "{{ item}}"
