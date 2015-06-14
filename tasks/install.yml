@@ -1,39 +1,32 @@
 ---
-- name: ensure that software-properties-common is installed if needed
-  apt: 
-    pkg: software-properties-common
-    state: latest 
-    update_cache: yes 
-    cache_valid_time: 600
-  when: ansible_distribution_release == "precise"
+- name: ensure openstack horizon requirements packages are installed
+  action: "{{ openstack_horizon_package_info.pkg_mgr }}"
+  args: openstack_horizon_package_info.args
+  with_items: openstack_horizon_package_info.pre_pkgs
+  when: openstack_horizon_package_info.pre_pkgs|length > 0
 
-- name: ensure that ubuntu cloud archive is available if needed
-  command: apt-add-repository cloud-archive:icehouse
-  when: ansible_distribution_release == "precise"
-  
-- name: ensure horizon packages and dependencies are installed
-  apt: 
-    pkg: "{{ item }}"
-    state: latest 
-    update_cache: yes 
-    cache_valid_time: 600
-  with_items:
-    - apache2
-    - libapache2-mod-wsgi
-    - memcached
-    - openstack-dashboard
+- name: ensure openstack repository is enabled
+  action: "{{ openstack_horizon_repo_info.pkg_repo }}"
+  args: openstack_horizon_repo_info.args
+  with_items: openstack_horizon_repo_info.repos
+  when: openstack_horizon_repo_info.repos|length > 0
 
-- name: ensure ubuntu theme is purged
-  apt: 
-    pkg: "{{ item }}"
-    state: absent
-    update_cache: yes 
-    cache_valid_time: 600
-  with_items:
-    - openstack-dashboard-ubuntu-theme
+- name: ensure openstack horizon packages are installed
+  action: "{{ openstack_horizon_package_info.pkg_mgr }}"
+  args: openstack_horizon_package_info.args
+  with_items: openstack_horizon_package_info.pkgs
+  when: openstack_horizon_package_info.pkgs|length > 0
 
-- name: ensure web server is started and enabled
-  service: 
-    name: apache2
-    state: started 
+- name: ensure undesirable openstack horizon packages are purged
+  action: "{{ openstack_horizon_package_info.pkg_mgr }}"
+  args: openstack_horizon_package_info.purge_args
+  with_items: openstack_horizon_package_info.purge_pkgs
+  when: openstack_horizon_package_info.purge_pkgs|length > 0
+
+- name: ensure horizon services are started and enabled
+  service:
+    name: "{{ item }}"
+    state: started
     enabled: yes
+  with_items: openstack_horizon_services
+  when: openstack_horizon_services|length > 0

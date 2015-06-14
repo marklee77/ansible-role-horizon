@@ -1,0 +1,31 @@
+openstack_horizon_package_info:
+  pkg_mgr: apt
+  args:
+    pkg: "{{ item }}"
+    update_cache: yes
+    cache_valid_time: 600
+    state: latest
+  pre_pkgs: []
+  pkgs:
+    - apache2
+    - libapache2-mod-wsgi
+    - memcached
+    - openstack-dashboard
+  purge_args:
+    pkg: "{{ item }}"
+    state: absent
+    purge: yes
+  purge_pkgs:
+    - openstack-dashboard-ubuntu-theme
+
+openstack_horizon_repo_info:
+  pkg_repo: apt_repository
+  args:
+    repo: "{{ item }}"
+    update_cache: yes
+    state: present
+  repos: []
+
+openstack_horizon_services:
+  - apache2
+  - memcached

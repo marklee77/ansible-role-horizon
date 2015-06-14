@@ -8,20 +8,16 @@
   register: modify_local_settings
 
 # need explicit stop due to bug in restart
-- name: stop openstack dashboard if necessary
+- name: stop openstack dashboard services if necessary
   service:
     name: "{{ item}}"
     state: stopped
-  with_items:
-    - apache2
-    - memcached
+  with_items: openstack_horizon_services
   when: modify_local_settings|changed
 
-- name: restart openstack dashboard if necessary
+- name: restart openstack dashboard services if necessary
   service:
     name: "{{ item}}"
     state: restarted
-  with_items:
-    - apache2
-    - memcached
+  with_items: openstack_horizon_services
   when: modify_local_settings|changed
