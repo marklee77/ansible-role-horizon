@@ -5,7 +5,7 @@
     cirros_url: http://cdn.download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img
     openstack_identity_demo_password: password
   vars_files:
-    - default/main.yml
+    - defaults/main.yml
   tasks:
 
     - name: update admin.openrc from template
